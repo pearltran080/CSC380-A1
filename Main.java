@@ -41,8 +41,9 @@ public class Main {
             Node initNode = new Node(conf, null, book);
             Node goalNode = new Node(goal, null, book);
             DFS dfs = new DFS(goalNode, initNode);
-            for (Node n : dfs.getResult()) {
-                System.out.println(n);
+            List<Node> finalPath = dfs.getResult();
+            for (int i=finalPath.size()-1; i >= 0; i--) {
+                System.out.println(finalPath.get(i));
             }
             
         }

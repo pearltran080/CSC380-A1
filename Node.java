@@ -1,4 +1,3 @@
-// package model;
 import java.util.*;
 
 public class Node {
@@ -32,7 +31,6 @@ public class Node {
         Book newBook = new Book(action, book.getDepth() + newState[blankPos[0]][blankPos[1]], newState[blankPos[0]][blankPos[1]], false);
         Node newChild = new Node(newState, this, newBook);
         return newChild;
-        // System.out.println(newChild);
     }
 
     public List<Node> expand() {
@@ -48,7 +46,6 @@ public class Node {
         if (i-1 != -1) {
             nextMove[0] = i-1;
             nextMove[1] = j;
-            // System.out.println(state[i-1][j]);
             Node child = move(blankPos, nextMove, "down");
             ret.add(child);
         }
@@ -56,7 +53,6 @@ public class Node {
         if (i+1 != state.length) {
             nextMove[0] = i+1;
             nextMove[1] = j;
-            // System.out.println(state[i+1][j]);
             Node child = move(blankPos, nextMove, "up");
             ret.add(child);
         }
@@ -64,7 +60,6 @@ public class Node {
         if (j-1 != -1) {
             nextMove[0] = i;
             nextMove[1] = j-1;
-            // System.out.println(state[i][j-1]);
             Node child = move(blankPos, nextMove, "right");
             ret.add(child);
         }
@@ -72,7 +67,6 @@ public class Node {
         if (j+1 != state[0].length){
             nextMove[0] = i;
             nextMove[1] = j+1;
-            // System.out.println(state[i][j+1]);
             Node child = move(blankPos, nextMove, "left");
             ret.add(child);
         }
@@ -96,7 +90,6 @@ public class Node {
                 if (state[i][j] == 0) {
                     blankPos[0] = i;
                     blankPos[1] = j;
-                    // System.out.println(i + ", " + j);
                 }
             }
         }
@@ -119,15 +112,26 @@ public class Node {
 
     public String toString() {
         String result = "";
+        result += this.book.getAction() + ", ";
+        result += "Cost: " + this.book.getCost() + ", ";
+        result += "Depth: " + this.book.getDepth() + "\n";
+        
         for (int[] row : state) {
             for (int i : row) {
                 result = result + i + " ";
             }
         }
+        result += "\n";
+
         return result;
     }
 
     public int[][] getState() {
         return this.state;
     }
+
+    public Node getParent() {
+        return this.parent;
+    }
+
 }
