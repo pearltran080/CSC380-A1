@@ -23,15 +23,14 @@ public class DFS {
 
         this.visited.add(current);
         List<Node> expansionList = current.expand();
+        List<Node> childrenList = new ArrayList<>();
 
         // filter already visited
         for (Node n : expansionList) {
             if (!contains(this.visited, n)) {
-                current.addChild(n);
+                childrenList.add(n);
             }
         }
-
-        List<Node> childrenList = current.getChildren();
         
         if (current.equalsTo(this.goal)) {
             this.finished = true;

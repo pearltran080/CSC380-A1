@@ -4,17 +4,13 @@ public class Node {
     private int[][] state;
     private static List<Node> children;
     private Node parent;
-    private Book book;
+    public Book book;
 
     public Node(int[][] state, Node parent, Book book) {
         this.state = state;
         this.parent = parent;
         this.book = book;
         this.children = new ArrayList<>();
-    }
-
-    public void addChild(Node child) {
-        this.children.add(child);
     }
 
     public Node move(int[] blankPos, int[] nextMove, String action) {
@@ -74,19 +70,11 @@ public class Node {
         return ret;
     }
 
-    public List<Node> getChildren() {
-        List<Node> currentChildren = new ArrayList<>();
-        for (Node n : this.children) {
-            currentChildren.add(n);
-        }
-        return currentChildren;
-    }
-
     public int[] getBlankPos() {
         int[] blankPos = new int[2];
 
-        for(int i=0; i < state.length; i++) {
-            for (int j=0; j < state[i].length; j++) {
+        for(int i=0; i < this.state.length; i++) {
+            for (int j=0; j < this.state[i].length; j++) {
                 if (state[i][j] == 0) {
                     blankPos[0] = i;
                     blankPos[1] = j;
@@ -99,9 +87,9 @@ public class Node {
 
     public boolean equalsTo(Node node) {
         int[][] otherState = node.getState();
-        for(int i=0; i < state.length; i++) {
-            for (int j=0; j < state[i].length; j++) {
-                if (state[i][j] != otherState[i][j]) {
+        for(int i=0; i < this.state.length; i++) {
+            for (int j=0; j < this.state[i].length; j++) {
+                if (this.state[i][j] != otherState[i][j]) {
                     return false;
                 }
             }
