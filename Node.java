@@ -2,7 +2,6 @@ import java.util.*;
 
 public class Node {
     private int[][] state;
-    private static List<Node> children;
     private Node parent;
     public Book book;
 
@@ -10,7 +9,6 @@ public class Node {
         this.state = state;
         this.parent = parent;
         this.book = book;
-        this.children = new ArrayList<>();
     }
 
     public Node move(int[] blankPos, int[] nextMove, String action) {
@@ -38,33 +36,33 @@ public class Node {
 
         int[] nextMove = new int[2];
 
-        // above
+        // check above
         if (i-1 != -1) {
             nextMove[0] = i-1;
             nextMove[1] = j;
-            Node child = move(blankPos, nextMove, "down");
-            ret.add(child);
+            Node child = move(blankPos, nextMove, "DOWN");
+            if (!child.equalsTo(parent)) ret.add(child);
         }
-        // below
+        // check below
         if (i+1 != state.length) {
             nextMove[0] = i+1;
             nextMove[1] = j;
-            Node child = move(blankPos, nextMove, "up");
-            ret.add(child);
+            Node child = move(blankPos, nextMove, "UP");
+            if (!child.equalsTo(parent)) ret.add(child);
         }
-        // left
+        // check left
         if (j-1 != -1) {
             nextMove[0] = i;
             nextMove[1] = j-1;
-            Node child = move(blankPos, nextMove, "right");
-            ret.add(child);
+            Node child = move(blankPos, nextMove, "RIGHT");
+            if (!child.equalsTo(parent)) ret.add(child);
         }
-        // right
+        // check right
         if (j+1 != state[0].length){
             nextMove[0] = i;
             nextMove[1] = j+1;
-            Node child = move(blankPos, nextMove, "left");
-            ret.add(child);
+            Node child = move(blankPos, nextMove, "LEFT");
+            if (!child.equalsTo(parent)) ret.add(child);
         }
 
         return ret;
@@ -86,6 +84,8 @@ public class Node {
     }
 
     public boolean equalsTo(Node node) {
+        if (node == null) return false;
+        
         int[][] otherState = node.getState();
         for(int i=0; i < this.state.length; i++) {
             for (int j=0; j < this.state[i].length; j++) {

@@ -2,7 +2,7 @@ import java.util.*;
 
 public class UCS {
     private Node goal;
-    private static Node initNode;
+    private Node initNode;
     private Node result;
 
     private List<Node> leafNodes;
