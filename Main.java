@@ -39,30 +39,25 @@ public class Main {
         Node initNode = new Node(conf, null, book);
         Node goalNode = new Node(goal, null, book);
 
+        SearchMethod search;
+
         if (method.equals("DFS")) {
-            DFS dfs = new DFS(goalNode, initNode);
-            List<Node> finalPath = dfs.getResult();
-            for (int i=finalPath.size()-1; i >= 0; i--) {
-                System.out.println(finalPath.get(i));
-            }
+            search = (SearchMethod) new DFS(goalNode, initNode);
         }
         else if (method.equals("UCS")) {
-            UCS ucs = new UCS(goalNode, initNode);
-            List<Node> finalPath = ucs.getResult();
-            for (int i=finalPath.size()-1; i >= 0; i--) {
-                System.out.println(finalPath.get(i));
-            }
+            search = new UCS(goalNode, initNode);
         }
         else if (method.equals("BFS")) {
-            BFS bfs = new BFS(goalNode, initNode);
-            List<Node> finalPath = bfs.getResult();
-            for (int i=finalPath.size()-1; i >= 0; i--) {
-                System.out.println(finalPath.get(i));
-            }
+            search = new BFS(goalNode, initNode);
         }
         else {
             System.out.println("Search method \"" + method + "\" not valid");
             return;
+        }
+
+        List<Node> finalPath = search.getResult();
+        for (int i=finalPath.size()-1; i >= 0; i--) {
+            System.out.println(finalPath.get(i));
         }
     }
 }
