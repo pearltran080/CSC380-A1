@@ -32,8 +32,9 @@ public class AStar implements SearchMethod{
     @Override
     public void run() {
         List<Node> children = this.initNode.expand();
+
         for (Node child : children) {
-            child.setH(geth1(child));
+            child.setH(geth1(child) +  geth2(child) + geth3(child));
         }
         this.heap.addAll(children);
 
@@ -52,7 +53,7 @@ public class AStar implements SearchMethod{
                 
                 children = chosenOne.expand();
                 for (Node child : children) {
-                    child.setH(geth1(child));
+                    child.setH(geth1(child) + geth2(child) + geth3(child));
                 }
                 this.heap.addAll(children);
                 
@@ -74,13 +75,40 @@ public class AStar implements SearchMethod{
         return misplacedTiles;
     }
 
-    // private int geth2(Node node) {
+    private int geth2(Node node) {
+        int manhattanSum = 0;
 
-    // }
+        for(int i=0; i < node.getState().length; i++) {
+            for(int j=0; j <node.getState()[i].length; j++) {
+                int[] goalPos = getGoalPos(node.getState()[i][j]);
+                manhattanSum += Math.abs(i - goalPos[0]) + Math.abs(j - goalPos[1]);
+            }
+        }
+        return manhattanSum;
+    }
 
-    // private int geth3(Node node) {
+    private int geth3(Node node) {
+        int sumOfTiles = 0;
 
-    // }
+        for(int i=0; i < node.getState().length; i++) {
+            for(int j=0; j <node.getState()[i].length; j++) {
+                int[] goalPos = getGoalPos(node.getState()[i][j]);
+                sumOfTiles += node.getState()[i][j] * (Math.abs(i - goalPos[0]) + Math.abs(j - goalPos[1]));
+            }
+        }
+        return sumOfTiles;
+    }
+
+    private int[] getGoalPos(int num) {
+        for(int i=0; i < this.goal.getState().length; i++) {
+            for(int j=0; j < this.goal.getState()[i].length; j++) {
+                if (this.goal.getState()[i][j] == num) {
+                    return new int[]{i, j};
+                }
+            }
+        }
+        return new int[2];
+    }
 
     @Override
     public boolean contains(List<Node> nodeLst, Node node) {
