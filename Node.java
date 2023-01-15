@@ -5,14 +5,20 @@ public class Node {
     private int[][] state;
     private Node parent;
     private Book book;
+    private int h;
 
     public Node(int[][] state, Node parent, Book book) {
         this.state = state;
         this.parent = parent;
         this.book = book;
+        this.h = 0;
     }
 
-    // generate new node for next move state
+    /*
+        - Generates new node for next move state
+        - Updates depth (using tile value as cost)
+        - Updates cost
+    */ 
     public Node move(int[] blankPos, int[] nextMove, String action) {
         int[][] newState = new int[state.length][state[0].length];
         for(int i=0; i < state.length; i++) {
@@ -29,11 +35,14 @@ public class Node {
         return newChild;
     }
 
+    /*
+        - Find all existing adjacent tiles next to 0 (blank tile)
+        - Returns children nodes for search method to use.
+    */ 
     public List<Node> expand() {
         List<Node> ret = new ArrayList<>();
         book.setExpanded(true);
 
-        // find position of 0
         int[] blankPos = getBlankPos();
         int i = blankPos[0];
         int j = blankPos[1];
@@ -87,10 +96,10 @@ public class Node {
         return blankPos;
     }
 
-    public boolean equalsTo(Node node) {
-        if (node == null) return false;
+    public boolean equalsTo(Node other) {
+        if (other == null) return false;
         
-        int[][] otherState = node.getState();
+        int[][] otherState = other.getState();
         for(int i=0; i < this.state.length; i++) {
             for (int j=0; j < this.state[i].length; j++) {
                 if (this.state[i][j] != otherState[i][j]) {
@@ -128,5 +137,13 @@ public class Node {
 
     public Book getBook() {
         return this.book;
+    }
+
+    public void setH(int num) {
+        this.h = num;
+    }
+
+    public int getH() {
+        return this.h;
     }
 }
