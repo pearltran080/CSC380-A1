@@ -1,52 +1,61 @@
 import java.util.*;
 
-public class DFS {
+public class DFS implements SearchMethod{
     private Node goal;
-    private Node root;
-    private List<Node> visited;
+    private Node initNode;
     private Node result;
-    private boolean finished;
+    private int time;
+    private int space;
+    private int length;
 
-    public DFS(Node goal, Node root) {
+    private Stack<Node> stack;
+    private List<Node> visited;
+
+    public DFS(Node goal, Node initNode) {
         this.goal = goal;
-        this.root = root;
-        this.finished = false;
-        this.visited = new ArrayList<Node>();
+        this.initNode = initNode;
         this.result = null;
-        run(this.root);
+        this.time = 0;
+        this.space = 0;
+        this.length = 0;
+
+        this.stack = new Stack<Node>();
+        this.visited = new ArrayList<>();
+
+        run();
     }
 
-    public void run(Node current) {
-        if (this.finished == true) {
-            return;
-        }
+    @Override
+    public void run() {
+        this.stack.push(this.initNode);
 
-        this.visited.add(current);
-        List<Node> expansionList = current.expand();
-        List<Node> childrenList = new ArrayList<>();
+        Node chosenOne = this.initNode;
 
-        // filter already visited
-        for (Node n : expansionList) {
-            if (!contains(this.visited, n)) {
-                childrenList.add(n);
+        while (!stack.empty()) {
+            if (chosenOne.equalsTo(this.goal)) {
+                this.result = chosenOne;
+                break;
             }
-        }
-        
-        if (current.equalsTo(this.goal)) {
-            this.finished = true;
-            this.result = current;
-            return;
-        }
-        else if (childrenList.size() == 0) {
-            return;
-        }
-        else {
-            for (Node n : childrenList) {
-                run(n);
+
+            else {
+                chosenOne = stack.pop();
+                this.visited.add(chosenOne);
+
+                List<Node> adjacentList = chosenOne.expand();
+
+                for (Node n : adjacentList) {
+                    if (!contains(this.visited, n)) {
+                        this.stack.push(n);
+                    }
+                }
+
+                this.time++;
+                if (stack.size() > space) space = stack.size();
             }
         }
     }
 
+    @Override
     public boolean contains(List<Node> nodeLst, Node node) {
         for(int i=0; i < nodeLst.size(); i++) {
             if(node.equalsTo(nodeLst.get(i))) {
@@ -57,14 +66,20 @@ public class DFS {
         return false;
     }
 
+    @Override
     public List<Node> getResult() {
         Node n = this.result;
         List<Node> sortedRes = new ArrayList<>();
+        int cost = n.getBook().getDepth();
+
         while (n.getParent() != null) {
+            this.length++;
             sortedRes.add(n);
             n = n.getParent();
         }
         sortedRes.add(n);
+
+        System.out.println("Final Cost: " + cost + ", Final Length: " + length + ", Time: " + time + ", Space: " + space + "\n");
 
         return sortedRes;
     }

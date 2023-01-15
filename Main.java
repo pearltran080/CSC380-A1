@@ -9,8 +9,7 @@ public class Main {
         String method = args[0];
         String difficulty = args[1];
 
-        // List<Node> path = new ArrayList<>();
-
+        // difficulty configurations
         int[][] conf;
         // int[][] easy = {{4,0,3},{5,2,1}};
         // int[][] goal = {{5,4,3},{0,2,1}};
@@ -35,6 +34,7 @@ public class Main {
             return;
         }
 
+        // creating starting node to begin chosen search method
         Book book = new Book(null, 0, 0, false);
         Node initNode = new Node(conf, null, book);
         Node goalNode = new Node(goal, null, book);
@@ -49,6 +49,13 @@ public class Main {
         else if (method.equals("UCS")) {
             UCS ucs = new UCS(goalNode, initNode);
             List<Node> finalPath = ucs.getResult();
+            for (int i=finalPath.size()-1; i >= 0; i--) {
+                System.out.println(finalPath.get(i));
+            }
+        }
+        else if (method.equals("BFS")) {
+            BFS bfs = new BFS(goalNode, initNode);
+            List<Node> finalPath = bfs.getResult();
             for (int i=finalPath.size()-1; i >= 0; i--) {
                 System.out.println(finalPath.get(i));
             }

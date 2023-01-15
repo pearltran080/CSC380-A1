@@ -1,9 +1,10 @@
+
 import java.util.*;
 
 public class Node {
     private int[][] state;
     private Node parent;
-    public Book book;
+    private Book book;
 
     public Node(int[][] state, Node parent, Book book) {
         this.state = state;
@@ -11,6 +12,7 @@ public class Node {
         this.book = book;
     }
 
+    // generate new node for next move state
     public Node move(int[] blankPos, int[] nextMove, String action) {
         int[][] newState = new int[state.length][state[0].length];
         for(int i=0; i < state.length; i++) {
@@ -30,6 +32,8 @@ public class Node {
     public List<Node> expand() {
         List<Node> ret = new ArrayList<>();
         book.setExpanded(true);
+
+        // find position of 0
         int[] blankPos = getBlankPos();
         int i = blankPos[0];
         int j = blankPos[1];
@@ -102,7 +106,7 @@ public class Node {
         String result = "";
         result += this.book.getAction() + ", ";
         result += "Cost: " + this.book.getCost() + ", ";
-        result += "Depth: " + this.book.getDepth() + "\n";
+        result += "Total cost: " + this.book.getDepth() + "\n";
         
         for (int[] row : state) {
             for (int i : row) {
@@ -122,4 +126,7 @@ public class Node {
         return this.parent;
     }
 
+    public Book getBook() {
+        return this.book;
+    }
 }
