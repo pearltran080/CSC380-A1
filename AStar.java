@@ -34,7 +34,7 @@ public class AStar implements SearchMethod{
         List<Node> children = this.initNode.expand();
 
         for (Node child : children) {
-            child.setH(geth1(child) +  geth2(child) + geth3(child));
+            child.setH(geth3(child));
         }
         this.heap.addAll(children);
 
@@ -53,7 +53,7 @@ public class AStar implements SearchMethod{
                 
                 children = chosenOne.expand();
                 for (Node child : children) {
-                    child.setH(geth1(child) + geth2(child) + geth3(child));
+                    child.setH(geth3(child));
                 }
                 this.heap.addAll(children);
                 
@@ -65,6 +65,7 @@ public class AStar implements SearchMethod{
 
     private int geth1(Node node) {
         int misplacedTiles = 0;
+        
         for(int i=0; i < node.getState().length; i++) {
             for(int j=0; j <node.getState()[i].length; j++) {
                 if (this.goal.getState()[i][j] != node.getState()[i][j]) {
@@ -72,7 +73,7 @@ public class AStar implements SearchMethod{
                 }
             }
         }
-        return misplacedTiles;
+        return node.getBook().getDepth() + misplacedTiles;
     }
 
     private int geth2(Node node) {
@@ -84,7 +85,7 @@ public class AStar implements SearchMethod{
                 manhattanSum += Math.abs(i - goalPos[0]) + Math.abs(j - goalPos[1]);
             }
         }
-        return manhattanSum;
+        return node.getBook().getDepth() + manhattanSum;
     }
 
     private int geth3(Node node) {
@@ -96,7 +97,7 @@ public class AStar implements SearchMethod{
                 sumOfTiles += node.getState()[i][j] * (Math.abs(i - goalPos[0]) + Math.abs(j - goalPos[1]));
             }
         }
-        return sumOfTiles;
+        return node.getBook().getDepth() + sumOfTiles;
     }
 
     private int[] getGoalPos(int num) {

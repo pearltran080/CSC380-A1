@@ -32,6 +32,7 @@ public class GBF implements SearchMethod{
     @Override
     public void run() {
         List<Node> children = this.initNode.expand();
+        
         for (Node child : children) {
             child.setH(geth1(child));
         }
@@ -64,6 +65,7 @@ public class GBF implements SearchMethod{
 
     private int geth1(Node node) {
         int misplacedTiles = 0;
+
         for(int i=0; i < node.getState().length; i++) {
             for(int j=0; j <node.getState()[i].length; j++) {
                 if (this.goal.getState()[i][j] != node.getState()[i][j]) {
