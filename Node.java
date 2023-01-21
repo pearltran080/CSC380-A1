@@ -15,10 +15,10 @@ public class Node {
     }
 
     /*
-        - Generates new node for next move state
-        - Updates depth (using tile value as cost)
-        - Updates cost
-    */ 
+     *   - Generates new node for next move state
+     *   - Updates depth (using tile value as cost)
+     *   - Updates cost
+     */ 
     public Node move(int[] blankPos, int[] nextMove, String action) {
         int[][] newState = new int[state.length][state[0].length];
         for(int i=0; i < state.length; i++) {
@@ -36,9 +36,9 @@ public class Node {
     }
 
     /*
-        - Find all existing adjacent tiles next to 0 (blank tile)
-        - Returns children nodes for search method to use.
-    */ 
+     *   - Find all existing adjacent tiles next to 0 (blank tile)
+     *   - Returns children nodes for search method to use.
+     */ 
     public List<Node> expand() {
         List<Node> ret = new ArrayList<>();
         book.setExpanded(true);
@@ -110,6 +110,10 @@ public class Node {
 
         return true;
     }
+
+    /*
+     *   - Prints state with cost and depth to get there
+     */ 
 
     public String toString() {
         String result = "";

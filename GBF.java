@@ -10,6 +10,7 @@ public class GBF implements SearchMethod{
     private int length;
 
     private PriorityQueue<Node> heap;
+    private List<Node> visited;
 
     public GBF(Node goal, Node initNode) {
         this.goal = goal;
@@ -21,17 +22,22 @@ public class GBF implements SearchMethod{
 
         this.heap = new PriorityQueue<Node>(new Comparator<Node>() {
             @Override
-            public int compare(Node o1, Node o2) {
+            public int compare(Node o1, Node o2) {  // min heap; sorted by lowest number of misplaced tiles
                 return Integer.compare(o1.getH(), o2.getH());
             }
         });
+        this.visited = new ArrayList<>();
 
         run();
     }
 
+    /*
+     *   - Run GBF
+     */
     @Override
     public void run() {
         List<Node> children = this.initNode.expand();
+        visited.add(this.initNode);
         
         for (Node child : children) {
             child.setH(geth1(child));
@@ -50,12 +56,16 @@ public class GBF implements SearchMethod{
 
             else {
                 chosenOne = heap.poll();
-                
+                visited.add(chosenOne);
+
                 children = chosenOne.expand();
+
                 for (Node child : children) {
-                    child.setH(geth1(child));
+                    if (!contains(this.visited, child)) {
+                        child.setH(geth1(child));
+                        this.heap.add(child);
+                    }
                 }
-                this.heap.addAll(children);
                 
                 this.time++;
                 if (heap.size() > space) space = heap.size();
@@ -63,6 +73,9 @@ public class GBF implements SearchMethod{
         }
     }
 
+    /*
+     *   - h1 = number of tiles that are not in correct position
+     */
     private int geth1(Node node) {
         int misplacedTiles = 0;
 
@@ -87,6 +100,9 @@ public class GBF implements SearchMethod{
         return false;
     }
 
+    /*
+     *   - Use goal/result state to reverse solution path back up to root/initial state
+     */
     @Override
     public List<Node> getResult() {
         Node n = this.result;

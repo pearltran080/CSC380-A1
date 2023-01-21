@@ -25,22 +25,29 @@ public class BFS implements SearchMethod{
         run();
     }
 
+    /*
+     *   - Run BFS
+     */
     @Override
     public void run() {
         this.queue.add(this.initNode);
+        this.visited.add(this.initNode);
 
         Node chosenOne = this.initNode;
 
         while (queue.size() != 0) {
             if (chosenOne.equalsTo(this.goal)) {
+                // save goal node to backtrack/reverse path later using its saved parent
                 this.result = chosenOne;
                 break;
             }
 
             else {
+                // poll node off stack to add to visited list
                 chosenOne = queue.poll();
                 this.visited.add(chosenOne);
 
+                // expand popped node and filter visited children
                 List<Node> adjacentList = chosenOne.expand();
 
                 for (Node n : adjacentList) {
@@ -66,6 +73,9 @@ public class BFS implements SearchMethod{
         return false;
     }
 
+    /*
+     *   - Use goal/result state to reverse solution path back up to root/initial state
+     */
     @Override
     public List<Node> getResult() {
         Node n = this.result;

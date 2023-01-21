@@ -10,6 +10,7 @@ public class UCS implements SearchMethod{
     private int length;
 
     private PriorityQueue<Node> heap;
+    private List<Node> visited;
 
     public UCS(Node goal, Node initNode) {
         this.goal = goal;
@@ -21,17 +22,22 @@ public class UCS implements SearchMethod{
 
         this.heap = new PriorityQueue<Node>(new Comparator<Node>() {
             @Override
-            public int compare(Node o1, Node o2) {
+            public int compare(Node o1, Node o2) {  // min heap; sorted by lowest depth
                 return Integer.compare(o1.getBook().getDepth(), o2.getBook().getDepth());
             }
         });
+        this.visited = new ArrayList<>();
 
         run();
     }
 
+    /*
+     *   - Run UCS
+     */
     @Override
     public void run() {
         this.heap.addAll(this.initNode.expand());
+        this.visited.add(this.initNode);
         this.space = heap.size();
 
         Node chosenOne = this.initNode;
@@ -44,7 +50,13 @@ public class UCS implements SearchMethod{
 
             else {
                 chosenOne = heap.poll();
-                heap.addAll(chosenOne.expand());
+                visited.add(chosenOne);
+
+                for (Node n : chosenOne.expand()) {
+                    if (!contains(this.visited, n)) {
+                        this.heap.add(n);
+                    }
+                }
                 
                 this.time++;
                 if (heap.size() > space) space = heap.size();
@@ -63,6 +75,9 @@ public class UCS implements SearchMethod{
         return false;
     }
 
+    /*
+     *   - Use goal/result state to reverse solution path back up to root/initial state
+     */
     @Override
     public List<Node> getResult() {
         Node n = this.result;

@@ -6,13 +6,13 @@ public class Main {
         String difficulty = args[1];
 
         int[][] initState;
-        // int[][] goal = {{0,1,2},{3,4,5}};
-        // int[][] easy = {{1,4,0},{3,5,2}};
         int[][] goal = {{1,2,3},{8,0,4},{7,6,5}};
+
         int[][] easy = {{1,3,4},{8,6,2},{7,0,5}};
         int[][] med = {{2,8,1},{0,4,3},{7,6,5}};
         int[][] hard = {{5,6,7},{4,0,8},{3,2,1}};
 
+        // set difficulty configuration
         if (difficulty.equals("easy")) {
             initState = easy;
         }

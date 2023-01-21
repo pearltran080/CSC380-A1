@@ -10,6 +10,7 @@ public class AStar implements SearchMethod{
     private int length;
 
     private PriorityQueue<Node> heap;
+    private List<Node> visited;
 
     public AStar(Node goal, Node initNode) {
         this.goal = goal;
@@ -21,20 +22,25 @@ public class AStar implements SearchMethod{
 
         this.heap = new PriorityQueue<Node>(new Comparator<Node>() {
             @Override
-            public int compare(Node o1, Node o2) {
+            public int compare(Node o1, Node o2) {  // min heap; sorted by lowest result from chosen heuristic
                 return Integer.compare(o1.getH(), o2.getH());
             }
         });
+        this.visited = new ArrayList<>();
 
         run();
     }
 
+    /*
+     *   - Run A*
+     */
     @Override
     public void run() {
         List<Node> children = this.initNode.expand();
+        visited.add(this.initNode);
 
         for (Node child : children) {
-            child.setH(geth3(child));
+            child.setH(geth2(child));   // change geth1, geth2, geth3 accordingly
         }
         this.heap.addAll(children);
 
@@ -50,12 +56,16 @@ public class AStar implements SearchMethod{
 
             else {
                 chosenOne = heap.poll();
+                visited.add(chosenOne);
                 
                 children = chosenOne.expand();
+
                 for (Node child : children) {
-                    child.setH(geth3(child));
+                    if (!contains(this.visited, child)) {
+                        child.setH(geth2(child));   // change geth1, geth2, geth3 accordingly
+                        this.heap.add(child);
+                    }
                 }
-                this.heap.addAll(children);
                 
                 this.time++;
                 if (heap.size() > space) space = heap.size();
@@ -63,6 +73,9 @@ public class AStar implements SearchMethod{
         }
     }
 
+    /*
+     *   - h1 = number of tiles that are not in correct position
+     */
     private int geth1(Node node) {
         int misplacedTiles = 0;
         
@@ -76,11 +89,14 @@ public class AStar implements SearchMethod{
         return node.getBook().getDepth() + misplacedTiles;
     }
 
+    /*
+     *   - h2 = sum of Manhattan distances between all tiles and their correct positions
+     */
     private int geth2(Node node) {
         int manhattanSum = 0;
 
         for(int i=0; i < node.getState().length; i++) {
-            for(int j=0; j <node.getState()[i].length; j++) {
+            for(int j=0; j < node.getState()[i].length; j++) {
                 int[] goalPos = getGoalPos(node.getState()[i][j]);
                 manhattanSum += Math.abs(i - goalPos[0]) + Math.abs(j - goalPos[1]);
             }
@@ -88,6 +104,9 @@ public class AStar implements SearchMethod{
         return node.getBook().getDepth() + manhattanSum;
     }
 
+    /*
+     *   - h3 = sum for each tile: tile value × Manhattan distance to correct position
+     */
     private int geth3(Node node) {
         int sumOfTiles = 0;
 
@@ -100,6 +119,9 @@ public class AStar implements SearchMethod{
         return node.getBook().getDepth() + sumOfTiles;
     }
 
+    /*
+     *   - Get desired goal position for a number
+     */
     private int[] getGoalPos(int num) {
         for(int i=0; i < this.goal.getState().length; i++) {
             for(int j=0; j < this.goal.getState()[i].length; j++) {
@@ -122,6 +144,9 @@ public class AStar implements SearchMethod{
         return false;
     }
 
+    /*
+     *   - Use goal/result state to reverse solution path back up to root/initial state
+     */
     @Override
     public List<Node> getResult() {
         Node n = this.result;
